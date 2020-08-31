@@ -1,6 +1,7 @@
 package com.hemendra.telephonytest
 
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -9,6 +10,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.telephony.SmsManager
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
@@ -32,6 +34,10 @@ class MainActivity : AppCompatActivity() {
         btn_send_email.setOnClickListener {
 
             sendMail()
+        }
+
+        btn_sendsms.setOnClickListener {
+            sendSMS()
         }
 
     }
@@ -58,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+
+
     fun addAttachment()
     {
 
@@ -79,12 +87,8 @@ class MainActivity : AppCompatActivity() {
             intent.setAction(Intent.ACTION_GET_CONTENT)
             intent.setType("*/*")
             startActivityForResult(intent,101)
-
         }
-
         aDialog.show()
-
-
     }
 
 
@@ -125,6 +129,21 @@ class MainActivity : AppCompatActivity() {
 
          return Uri.parse(path)
      }
+
+
+    fun sendSMS()
+    {
+
+        var sIntent = Intent(this,SentActivity::class.java)
+        var dIntent = Intent(this,DelieverActivity::class.java)
+
+        var spIntent = PendingIntent.getActivity(this,0,sIntent,PendingIntent.FLAG_CANCEL_CURRENT)
+        var dpIntent = PendingIntent.getActivity(this,0,dIntent,PendingIntent.FLAG_CANCEL_CURRENT)
+        var sManager = SmsManager.getDefault()
+        sManager.sendTextMessage(
+            et_mobile.text.toString(),null,et_message.text.toString(),null,null)
+
+    }
 
 
 
